@@ -7,4 +7,4 @@ class SubscriptionCreation(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ('text',)
+        fields = ('full_name', 'short_name')
