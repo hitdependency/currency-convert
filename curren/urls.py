@@ -7,6 +7,7 @@ from rest_framework.authtoken import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^users/', include('users.urls')),
+    url(r'^currencies/', include('subscriptions.urls'))
 ]
 
 # login-auth

@@ -2,12 +2,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from .serializers import (
-    UserViewSerializer, UserCreateSerializer
+    UserViewSerializer, UserCreateSerializer, UserAddSubscription
 )
 
 class UsersView(GenericAPIView):
@@ -29,13 +30,34 @@ class UsersView(GenericAPIView):
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
+class UserSubscriptionsControl(GenericAPIView):
+    serializer_class = UserAddSubscription
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.get_queryset()
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserAddSubscription(data=request.data, context={'request':request})
+        user = get_object_or_404(User, id=kwargs['id'])
+
+        if serializer.is_valid(raise_exception=True):
+            user.subscriptions.add(*serializer.validated_data['subscriptions'])
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    def delete(self, request, *args, **kwargs):
+        serializer = UserAddSubscription(data=request.data, context={'request':request})
+        user = get_object_or_404(User, id=kwargs['id'])
+
+        if serializer.is_valid(raise_exception=True):
+            user.subscriptions.remove(*serializer.validated_data['subscriptions'])
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
 class UserDetailView(GenericAPIView):
     serializer_class = UserViewSerializer
 
-    def get_object(self):
-        return get_object_or_404(User, )
-
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=kwargs['id'])
+        user = get_object_or_404(User,id=kwargs['id'])
         data = UserViewSerializer(user).data
         return Response(data=data)

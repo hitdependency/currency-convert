@@ -7,7 +7,7 @@ class UserViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username'
+            'username',
             'subscriptions'
         )
 
@@ -23,3 +23,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+class UserAddSubscription(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'subscriptions',
+        )
+
+    # def validate(self, attrs):
+    #     subscription = attrs['subscription']
