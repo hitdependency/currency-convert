@@ -4,5 +4,5 @@ from .views import *
 
 urlpatterns = [
     url(r'^$', SubscriptionsView.as_view()),
-    url(r'^(?P<id>\d+)/$', SubscriptionsDetailView.as_view())
+    url(r'^(?P<id>.+)/$', SubscriptionsDetailView.as_view())
 ]

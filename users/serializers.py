@@ -16,13 +16,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id',
             'username',
-            'password'
         )
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
 
 class UserAddSubscription(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +25,3 @@ class UserAddSubscription(serializers.ModelSerializer):
         fields = (
             'subscriptions',
         )
-
-    # def validate(self, attrs):
-    #     subscription = attrs['subscription']
