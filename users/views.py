@@ -39,8 +39,8 @@ class UserSubscriptionsControl(GenericAPIView):
         serializer = self.serializer_class(data=request.data, context={'request':request})
         user = get_object_or_404(User, id=kwargs['id'])
 
-        if not request.auth is Token.objects.get(user=user).key:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not request.user == user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
         if serializer.is_valid(raise_exception=True):

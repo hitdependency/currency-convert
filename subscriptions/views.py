@@ -30,12 +30,12 @@ class SubscriptionsDetailView(GenericAPIView):
     permission_classes = (IsAdminUser,)
 
     def get(self, request, *args, **kwargs):
-        currency = get_object_or_404(Subscription, short_name=kwargs['id'])
+        currency = get_object_or_404(Subscription, id=kwargs['id'])
         data = self.serializer_class(currency).data
         return Response(data=data)
 
     def delete(self, request, *args, **kwargs):
-        currency = get_object_or_404(Subscription, short_name=kwargs['id'])
+        currency = get_object_or_404(Subscription, id=kwargs['id'])
         currency.delete()
         pass
 
